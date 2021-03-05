@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import managers.GameSceneManager;
 import scenes.Home;
 
-public class ProjetJordan extends ApplicationAdapter {
+public class Launcher extends ApplicationAdapter {
 	
 	private GameSceneManager gsm;
 	private SpriteBatch sb;
