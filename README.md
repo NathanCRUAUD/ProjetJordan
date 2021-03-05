@@ -1,7 +1,7 @@
 # Code
-1.**Cloner le projet Git Hub en local**  
+1. **Cloner le projet Git Hub en local**  
 *Ne contient que du code Java.*  
-*On obtient un dossier ProjetJordan avec à l'intérieur: .git, core, desktop, REAMDME et un fichier gitignore.*
+*On obtient un dossier ProjetJordan avec à l'intérieur: .git, core, desktop, REAMDME et un fichier gitignore.*  
 2. **Récurer sur le Drive dans le dossier "Projet" tous les dossiers et fichiers (gradle, settings, ect...) ou creer un projet libgdx avec l'outil**  
 3. **Récurer sur le Drive le dossier "To import/assets" et le placer dans le dossier ProjetJordan/core en local**  
 4. **Dans Eclipse, file/import/Gradle/Existing Gradle Project, Next**  
