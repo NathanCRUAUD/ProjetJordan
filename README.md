@@ -12,8 +12,10 @@
 5. **Ouvrir ce dossier git (ProjetJordan), couper tous les éléments à l'intérieur puis les coller dans le projet libGDX**
 *Le projet libGDX devrait aussi s'appeler "ProjetJordan" et devrait être situé un dossier plus haut dans la hiérarchie*  
 *Penser à supprimer le dossier git "ProjetJordan" qui devrait maintenant être vide*
-6. **Récurer sur le Drive le dossier "assets" (dans "To import") et le placer dans le dossier ProjetJordan/core en local**   
-7. **Changer l'acces au jdbc: "clique droit sur core"/Build path/Configure build path, cliquer sur "Project and external dependencies" puis sur "add external jars" enfin selectionner le jdbc**  
+7. **Réouvrir le repository git car il vient d'être déplacé**  
+*C'est le dossier "ProjetJordan" contientant un dossier .git*  
+9. **Récurer sur le Drive le dossier "assets" (dans "To import") et le placer dans le dossier ProjetJordan/core en local**   
+10. **Changer l'acces au jdbc: "clique droit sur core"/Build path/Configure build path, cliquer sur "Project and external dependencies" puis sur "add external jars" enfin selectionner le jdbc**  
 # Base de données
 1. **Lancer phpMyAdmin**  
 2. **Creer une base de données "game_db" en "utf8_general_ci"**  
