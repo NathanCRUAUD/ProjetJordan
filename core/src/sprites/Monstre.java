@@ -1,68 +1,93 @@
 package sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
+import scenes.GameScene;
 import utils.Constants;
+import utils.Transform;
 
-public class Monstre {
+public class Monstre extends GameObject{
 
-	private Texture texture;
-	private Vector2 position;
-	private Vector2 direction;
+	private Circle body;
+	private GameObject nearestBonus;
+	private GameObject nearestEnnemis;
 	
-	public Monstre(float x, float y) {
+	
+	public Monstre(GameScene scene, float x, float y, Array<String> tags) {
+		super(scene, tags);
 		this.texture = new Texture("PNG/greenery_2.png");
-		this.position = new Vector2(x, y);
-		this.direction = new Vector2(0,0);
-		
-		
+		this.transform = new Transform(new Vector2(0, 0));
+		float radius = Math.min(this.texture.getHeight(),this.texture.getWidth())/2;
+		this.body = new Circle(this.transform.getPosition(), radius);	
 	}
+	
+	public Monstre(GameScene scene, float x, float y) {
+		this(scene, x, y, new Array<String>());
+	}
+	
 	public void update(float dt) {
-		int x = 0;
-		int y = 0;
 		
-		
-		this.direction.add(x*Constants.SPEED, y*Constants.SPEED);
-		this.direction.scl(dt);
-		this.position.add(this.direction);
-		this.direction.scl(1/dt);
-		
-		if(this.position.y < Constants.MIN_Y) {
-			this.position.y = Constants.MIN_Y;
-			this.direction.y = 0;
+		nearestBonus = this.nearest("bonus");
+		if(this.tags.contains("Equipe1", false)) {
+			nearestEnnemis = this.nearest("Equipe2");
 		}
-		else if(this.position.y > Constants.MAX_Y) {
-			this.position.y = Constants.MAX_Y;
-			this.direction.y = 0;
+		if(this.tags.contains("Equipe2", false)) {
+			nearestEnnemis = this.nearest("Equipe1");
 		}
-		else if(this.position.x > Constants.MAX_X) {
-			this.position.x = Constants.MAX_X;
-			this.direction.x = 0;
+		if (nearestBonus!=null) {
+			this.moveToward(nearestBonus);
 		}
-		else if(this.position.x < Constants.MIN_X) {
-			this.position.x = Constants.MIN_X;
-			this.direction.x = 0;
+		else if (nearestBonus==null && nearestEnnemis!=null) {
+			this.moveToward(nearestEnnemis);
 		}
 		
+		//GameObject nearestBonus = this.nearest("bonus");
+//		if(nearest!=null) {
+//			System.out.println("nearest: "+nearest+"\n"+this.getPosition().dst(nearest.getPosition())+" unités");
+//		}
+		
+		
+		
+		if(this.transform.getY() < Constants.MIN_Y) {
+			this.transform.setY(Constants.MIN_Y);
+		}
+		else if(this.transform.getY() > Constants.MAX_Y) {
+			this.transform.setY(Constants.MAX_Y);
+		}
+		else if(this.transform.getX() > Constants.MAX_X) {
+			this.transform.setX(Constants.MAX_X);
+		}
+		else if(this.transform.getX() < Constants.MIN_X) {
+			this.transform.setX(Constants.MIN_X);
+		}
+		
+		this.body.setPosition(this.transform.getPosition());
 	}
+	
 	public void moveRight() {
-		this.position.x+=Constants.SPEED;
+		this.transform.setX(this.transform.getX()+Constants.SPEED * Gdx.graphics.getDeltaTime());
 	}
 	public void moveLeft() {
-		this.position.x-=Constants.SPEED;
+		this.transform.setX(this.transform.getX()-Constants.SPEED * Gdx.graphics.getDeltaTime());
 	}
 	public void moveUp() {
-		this.position.y+=Constants.SPEED;
+		this.transform.setY(this.transform.getY()+Constants.SPEED * Gdx.graphics.getDeltaTime());
 	}
 	public void moveDown() {
-		this.position.y-=Constants.SPEED;
+		this.transform.setY(this.transform.getY()-Constants.SPEED * Gdx.graphics.getDeltaTime());
 	}
 	public Texture getTexture() {
 		return this.texture;
 	}
-	public Vector2 getPosition() {
-		return this.position;
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
+	public Circle getBody() {
+		return body;
 	}
 	public void dispose() {
 		this.texture.dispose();

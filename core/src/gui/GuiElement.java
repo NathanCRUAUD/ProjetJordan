@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
-import scenes.PlayScene;
 import utils.Constants;
 import utils.Transform;
 
@@ -48,7 +47,7 @@ public class GuiElement {
 		draw(sb, this.transform.getX(), this.transform.getY());
 	}
 	
-	public void draw(SpriteBatch sb, int x, int y) {
+	public void draw(SpriteBatch sb, float x, float y) {
 		if(this.texture!=null) {
 			sb.draw(this.texture, x, y);
 		}

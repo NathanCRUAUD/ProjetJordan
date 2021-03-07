@@ -1,8 +1,8 @@
 package scenes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 
 import gui.GuiElement;
 import managers.GameSceneManager;
@@ -18,21 +18,26 @@ public class Home extends GameScene {
 	public Home(GameSceneManager gsm) {
 		super(gsm);
 		this.cam.setToOrtho(false, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGH);
-		this.setBackground(Resizer.resize("PNG/lite.png"));
+		this.setBackground(Resizer.resize("PNG/home.png"));
+		this.setSceneMusic("homeMusic.mp3");
+		if (Constants.PLAY_MUSIC) {
+			this.sceneMusic.play();}
 		String fontPath = "fonts/AgentOrange.ttf";
-		this.gameTitleText = new GuiElement(null, 450, fontPath, Constants.GAME_TITLE, 80);
-//		this.gameTitleText.setTexture(new Texture(Gdx.files.internal("PNG/stones_6.png")));
 		this.startText = new GuiElement(null, 250, fontPath, "Commencer", 32);  
 		this.quitText = new GuiElement(null, 150, fontPath, "Quitter", 32);
-		
-		
+		this.gameTitleText = new GuiElement(null, 450, fontPath, Constants.GAME_TITLE, 80);	
 	}
 
 	@Override
 	protected void handleInput() {
 		if(Gdx.input.isTouched()) {
+			Vector3 touchPos = new Vector3();
+		    touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+		    System.out.println(touchPos);
+		    this.cam.unproject(touchPos);
+			System.out.println(touchPos);
 			this.gsm.set(new PlayScene(this.gsm));
-		}
+		}	
 	}
 
 	@Override
@@ -57,6 +62,6 @@ public class Home extends GameScene {
 		this.gameTitleText.dispose();
 		this.startText.dispose();
 		this.quitText.dispose();
+		this.sceneMusic.dispose();
 	}
-
 }
