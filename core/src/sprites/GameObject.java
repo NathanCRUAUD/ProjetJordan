@@ -1,6 +1,7 @@
 package sprites;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -22,11 +23,16 @@ public abstract class GameObject {
 	public GameObject(GameScene scene, Array<String> tags) {
 		this.scene = scene;
 		this.tags = tags;
-		//this.transform = new Transform(new Vector2(0, 0));
 		this.scene.gameObjects.add(this);
 	}
 	
 	public abstract void update(float dt);
+	
+	public void draw(SpriteBatch sb) {
+		sb.draw(this.getTexture(), this.getTexturePosition().x, this.getTexturePosition().y);
+	}
+	
+	public abstract void dispose();
 	
 	public void moveToward(GameObject go) {
 		if (go!=null) {
@@ -43,15 +49,10 @@ public abstract class GameObject {
 		Array<GameObject> lgo = this.scene.gameObjects;
 		GameObject tmp = null;
 		float min=0, dist;
+		int i = 0;
 		boolean minGot = false;
 		
-		/*for(GameObject g: lgo) {
-			System.out.print(g+" ");
-		}
-		System.out.println("");*/
-		
 		if (lgo.size>1) {
-			int i = 0;
 			do {
 				if ((lgo.get(i).tags.contains(tag,false) || tag.equals("")) && !lgo.get(i).equals(this)) {
 					if (!minGot) {
@@ -77,6 +78,12 @@ public abstract class GameObject {
 	public void setTexture(Texture texture) {
 		this.texture = texture;
 	}
+	public Texture getTexture() {
+		return texture;
+	}
+	public Vector2 getTexturePosition() {
+		return new Vector2(this.getX()-(this.texture.getWidth()/2), this.getY()-(this.texture.getHeight())/2);
+	}
 	
 	public Vector2 getPosition() {
 		return this.transform.getPosition();
@@ -87,7 +94,6 @@ public abstract class GameObject {
 	public float getY() {
 		return this.transform.getY();
 	}
-	
 	public void setPosition(Vector2 position) {
 		this.transform.setPosition(position);
 	}
@@ -101,6 +107,5 @@ public abstract class GameObject {
 		this.transform.setY(y);
 	}
 
-	
 
 }

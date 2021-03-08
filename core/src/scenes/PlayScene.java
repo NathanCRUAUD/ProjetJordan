@@ -20,7 +20,6 @@ import utils.Resizer;
 public class PlayScene extends GameScene {
 
 	private Texture background;
-	//private Monstre monstre;
 	private Array<Monstre> monstres;
 	private Array<Monstre> monstres2;
 	private Array<Bonus> bonuss;
@@ -28,6 +27,7 @@ public class PlayScene extends GameScene {
 	
 	private Array<String> tagsE1;
 	private Array<String> tagsE2;
+	private Array<String> tags;
 	
 	public PlayScene(GameSceneManager gsm) {
 		super(gsm);
@@ -43,10 +43,10 @@ public class PlayScene extends GameScene {
 		tagsE1.add("Equipe1");
 		tagsE2 = new Array<String>();
 		tagsE2.add("Equipe2");
+		tags = new Array<String>();
+		tags.add("bonus");
 		
 		this.monstres.add(new Monstre(this, 300, 300, tagsE1));
-		//this.monstres2.add(new Monstre(this, 300, 300, tagsE2));
-		//this.monstres2.get(this.monstres2.size-1).setTexture(new Texture("PNG/greenery_10.png"));
 		this.bonuss = new Array<Bonus>();
 	}
 
@@ -75,67 +75,25 @@ public class PlayScene extends GameScene {
 	@Override
 	public void update(float dt) {
 		this.handleInput();
-		for(Monstre m : this.monstres) {
-			m.update(dt);
-		}
-		for(Monstre m : this.monstres2) {
-			m.update(dt);
+		for(GameObject go : this.gameObjects) {
+			go.update(dt);
 		}
 		
-		Array<String> tags = new Array<String>();
-		tags.add("bonus");
 		if(false || ((TimeUtils.millis() - lastBonusTime)/1000 > Constants.TIME_BONUS && bonuss.size<Constants.MAX_BONUS)) {
 			this.lastBonusTime = TimeUtils.millis();
 			bonuss.add(new Bonus(this, MathUtils.random(0, Constants.MAX_X), MathUtils.random(0, Constants.MAX_Y),tags));
 			bonuss.get(bonuss.size-1).playApparitionSound();
-			
 		}
-		
-		for(Monstre m : this.monstres) {
-			for (Iterator<Bonus> iter = bonuss.iterator(); iter.hasNext(); ) {
-				Bonus bonus = iter.next();
-				//bonus.update(dt);
-				
-		        if(bonus.overlaps(m.getBody())) {
-		            bonus.playDisparitionSound();
-		            this.gameObjects.removeValue(bonus, false);
-		            iter.remove();
-		         }	
-		    }
-		}
-		for(Monstre m : this.monstres2) {
-			for (Iterator<Bonus> iter = bonuss.iterator(); iter.hasNext(); ) {
-				Bonus bonus = iter.next();
-				//bonus.update(dt);
-				
-		        if(bonus.overlaps(m.getBody())) {
-		            bonus.playDisparitionSound();
-		            this.gameObjects.removeValue(bonus, false);
-		            iter.remove();
-		         }	
-		    }
-		}
-		
-		
-		
-		
-		
-		
+	
 	}
 
 	@Override
 	public void render(SpriteBatch sb) {
 		sb.begin();
 		sb.draw(this.background, 0,0);
-		for(Monstre m : this.monstres) {
-			sb.draw(m.getTexture(), m.getPosition().x, m.getPosition().y);
+		for(GameObject go : this.gameObjects) {
+			go.draw(sb);
 		}
-		for(Monstre m : this.monstres2) {
-			sb.draw(m.getTexture(), m.getPosition().x, m.getPosition().y);
-		}
-		for(Bonus bonus: bonuss) { 
-	         sb.draw(bonus.getTexture(), bonus.getTexturePosition().x, bonus.getTexturePosition().y);
-	    }
 		sb.end();
 
 	}
@@ -144,7 +102,16 @@ public class PlayScene extends GameScene {
 	public void dispose() {
 		this.background.dispose();
 		this.sceneMusic.dispose();
-
+		
+		for(GameObject go : this.gameObjects) {
+			go.dispose();
+		}
 	}
+
+	public Array<Bonus> getBonuss() {
+		return bonuss;
+	}
+	
+	
 
 }

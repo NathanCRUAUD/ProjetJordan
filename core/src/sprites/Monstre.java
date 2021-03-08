@@ -1,5 +1,7 @@
 package sprites;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
@@ -7,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import scenes.GameScene;
+import scenes.PlayScene;
 import utils.Constants;
 import utils.Transform;
 
@@ -15,21 +18,22 @@ public class Monstre extends GameObject{
 	private Circle body;
 	private GameObject nearestBonus;
 	private GameObject nearestEnnemis;
-	
-	
+
+
 	public Monstre(GameScene scene, float x, float y, Array<String> tags) {
 		super(scene, tags);
 		this.texture = new Texture("PNG/greenery_2.png");
-		this.transform = new Transform(new Vector2(0, 0));
+		this.transform = new Transform(new Vector2(x, y));
 		float radius = Math.min(this.texture.getHeight(),this.texture.getWidth())/2;
 		this.body = new Circle(this.transform.getPosition(), radius);	
 	}
-	
+
 	public Monstre(GameScene scene, float x, float y) {
 		this(scene, x, y, new Array<String>());
 	}
-	
+
 	public void update(float dt) {
+		System.out.println("update monstre");
 		
 		nearestBonus = this.nearest("bonus");
 		if(this.tags.contains("Equipe1", false)) {
@@ -44,14 +48,20 @@ public class Monstre extends GameObject{
 		else if (nearestBonus==null && nearestEnnemis!=null) {
 			this.moveToward(nearestEnnemis);
 		}
+
 		
-		//GameObject nearestBonus = this.nearest("bonus");
-//		if(nearest!=null) {
-//			System.out.println("nearest: "+nearest+"\n"+this.getPosition().dst(nearest.getPosition())+" unités");
-//		}
-		
-		
-		
+		for (Iterator<Bonus> iter = ((PlayScene)this.scene).getBonuss().iterator(); iter.hasNext(); ) {
+			Bonus bonus = iter.next();
+
+			if(bonus.overlaps(this.getBody())) {
+				bonus.playDisparitionSound();
+				this.scene.gameObjects.removeValue(bonus, false);
+				iter.remove();
+			}	
+		}
+
+
+
 		if(this.transform.getY() < Constants.MIN_Y) {
 			this.transform.setY(Constants.MIN_Y);
 		}
@@ -64,10 +74,15 @@ public class Monstre extends GameObject{
 		else if(this.transform.getX() < Constants.MIN_X) {
 			this.transform.setX(Constants.MIN_X);
 		}
-		
+
 		this.body.setPosition(this.transform.getPosition());
 	}
-	
+
+	@Override
+	public void dispose() {
+		this.texture.dispose();
+	}
+
 	public void moveRight() {
 		this.transform.setX(this.transform.getX()+Constants.SPEED * Gdx.graphics.getDeltaTime());
 	}
@@ -80,16 +95,10 @@ public class Monstre extends GameObject{
 	public void moveDown() {
 		this.transform.setY(this.transform.getY()-Constants.SPEED * Gdx.graphics.getDeltaTime());
 	}
-	public Texture getTexture() {
-		return this.texture;
-	}
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
+
 	public Circle getBody() {
 		return body;
 	}
-	public void dispose() {
-		this.texture.dispose();
-	}
+
+
 }

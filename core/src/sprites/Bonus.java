@@ -4,10 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import scenes.GameScene;
+import scenes.PlayScene;
+import utils.Constants;
 import utils.Transform;
 
 public class Bonus extends GameObject {
@@ -15,6 +19,10 @@ public class Bonus extends GameObject {
 	private Sound disparitionSound;
 	private Sound apparitionSound;
 	private Circle body;
+	private long lastBonusTime;
+	private Array<Bonus> bonuss;
+	private Array<String> tags = new Array<String>();
+	
 
 	public Bonus(GameScene scene, float x, float y, Array<String> tags) {
 		super(scene, tags);
@@ -25,15 +33,25 @@ public class Bonus extends GameObject {
 		this.body = new Circle();
 		this.body.radius = Math.min(texture.getHeight(),texture.getWidth())/2;
 	    this.body.setPosition(this.transform.getPosition());
+	    tags.add("bonus");
 	    
 	}
 	public Bonus(GameScene scene, float x, float y) {
 		this(scene, x, y, new Array<String>());
 	}
 
-	@Override
+	
 	public void update(float dt) {	
+		
 	}
+	
+	@Override
+	public void dispose() {
+		this.texture.dispose();
+		this.apparitionSound.dispose();
+		this.disparitionSound.dispose();
+	}
+
 	
 	public boolean overlaps(Circle c) {
 		return this.body.overlaps(c);
@@ -47,12 +65,9 @@ public class Bonus extends GameObject {
 		this.apparitionSound.play();
 	}
 
-	public Texture getTexture() {
-		return texture;
-	}
 	
-	public Vector2 getTexturePosition() {
-		return new Vector2(this.getX()-(this.texture.getWidth()/2), this.getY()-(this.texture.getHeight())/2);
-	}
+	
+	
+	
 	
 }
